@@ -25,18 +25,22 @@ import Tkinter as tk #If we are using Python 3, change "Tkinter" to "tkinter"
 pwm = Adafruit_PCA9685.PCA9685()
 
 minMotionX = 150 # The maximum servo motion left and right (pan)
-minMotionY = 150
-maxMotionX = 700 # The maximum servo motion left and right (pan)
-maxMotionY = 700 # The maximum serco motion up and down (tilt)
-curX = 200 # Holds the current x position
-curY = 500 # Holds the current y position
+minMotionY = 300
+maxMotionX = 600 # The maximum servo motion left and right (pan)
+maxMotionY = 650 # The maximum serco motion up and down (tilt)
+curX = 375 # Holds the current x position
+curY = 400 # Holds the current y position
 moveDis = 5 # Tells the key presses how far to move each time
 #12 21 # A reminder of the size of the box that the x is in (in pixels)
 
 
 
-pwm.set_pwm(0, 0, maxMotionY)
-pwm.set_pwm(1, 1, maxMotionX)
+pwm.set_pwm_freq(60) # Set frequency to 60hz, good for servos.
+pwm.set_pwm(1, 1, 375) # Set X starting position
+pwm.set_pwm(0, 0, 400) # Set Y starting position
+print('Initializing servos on channel 0 and 1, "X" GUI window to quit...')
+print('If cv2 color doesnt run: close the program, give it 5 seconds, then try again')
+
 
 #***************************************************************************************************************************************
 #This section is for functions that need to be defined before running.
@@ -181,7 +185,7 @@ aim = tk.Label(root, text="X", fg = "black", bg = "red")
 
 
 
-aim.place(x=10, y=10) # Initializes the X to the top left corner
+aim.place(x=15, y=15) # Initializes the X to the top left corner
 
 #We can comment in the following line for debug purposes, if we need it.
 #root.bind('<Motion>', mouseMotion) # Detects the position of the mouse within the GUI window.
@@ -198,6 +202,9 @@ root.bind('<Control-Left>', keyMotionDL)
 
 root.mainloop() # Displays the GUI until the close button is pressed.
 
+pwm.set_pwm(1, 1, 375) # Set X ending position
+pwm.set_pwm(0, 0, 400) # Set Y ending position
+pwm.set_pwm_freq(0) # Shuts down PWM motor signals
 cv2.destroyAllWindows()
 cap.release()
 
